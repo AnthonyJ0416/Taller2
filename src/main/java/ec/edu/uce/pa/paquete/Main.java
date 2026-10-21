@@ -9,7 +9,7 @@ import jakarta.inject.Inject;
 public class Main implements QuarkusApplication {
 
     @Inject
-    private PedidoService pedidoService;
+    private BoletoService boletoService;
 
     public static void main(String[] args){
         Quarkus.run(Main.class, args);
@@ -18,8 +18,8 @@ public class Main implements QuarkusApplication {
     @Override
     public int run(String... args) throws Exception {
         System.out.println("INICIANDO APP QUARKUS");
-        Pedido pedido = new Pedido("Anthony Joseph", "Laptop", 1500.00, "juan.perez@example.com");
-        this.pedidoService.realizar(pedido);
+        Boleto boleto = new Boleto("Anthony Joseph", "Avengers: Doomsday", "7:00 PM", "QR123456", 12.50);
+        this.boletoService.reservar(boleto);
         return 0;
     }
 
