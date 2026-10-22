@@ -1,10 +1,11 @@
 package ec.edu.uce.pa.paquete;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Singleton;
 
-@ApplicationScoped
+//@ApplicationScoped
 //@RequestScoped// para apps web
-//@Singleton
+@Singleton
 public class MailService {
 
     public void enviar(String correo, String asunto, String cuerpo) {
