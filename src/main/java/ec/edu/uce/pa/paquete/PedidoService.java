@@ -1,6 +1,7 @@
 package ec.edu.uce.pa.paquete;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.spi.CDI;
 import jakarta.inject.Inject;
 
 @ApplicationScoped // delega el control al contenedor Arc
@@ -15,7 +16,7 @@ public class PedidoService {
      * 
      */
 
-    //private MailService mailService;
+   //  private MailService mailService;
     /*
      * // INYECCION DE DEPENDENCIAS POR CONSTRUCTOR
      * 
@@ -25,20 +26,17 @@ public class PedidoService {
      * 
      * }
      */
-
+/* 
     // INYECCION DE DEPENDENCIA POR SETTER
-
     private MailService mailService;
-
     @Inject
-
     public void setMailService(MailService mailService) {
-
         this.mailService = mailService;
-
     }
-
+*/
     public void realizar(Pedido pedido) {
+        //lookup de la clase MailService
+        MailService  mailService = CDI.current().select(MailService.class).get();
         System.out.println("Realizando pedido...");
         System.out.println("Pedido realizado para el cliente: " + pedido.getCliente());
         System.out.println("Producto: " + pedido.getProducto());
@@ -51,6 +49,6 @@ public class PedidoService {
                 "Su pedido de " + pedido.getProducto() + " por un total de $" + pedido.getTotal()
                 + " ha sido realizado con éxito.";
 
-        this.mailService.enviar(pedido.getCorreo(), asunto, cuerpo);
+        mailService.enviar(pedido.getCorreo(), asunto, cuerpo);
     }
 }
