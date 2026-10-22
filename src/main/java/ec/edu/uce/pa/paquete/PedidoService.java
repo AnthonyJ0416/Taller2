@@ -3,40 +3,21 @@ package ec.edu.uce.pa.paquete;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.spi.CDI;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 @ApplicationScoped // delega el control al contenedor Arc
 // @RequestScoped //apps web
 // @Singleton
 public class PedidoService {
-    /*
-     * //INYECCION POR ATRIBUTO
-     * 
-     * @Inject
-     * private MailService mailService;
-     * 
-     */
+    @Inject 
+    @Named("mail")
+    private Notificacion notificacionCorreo;
+    @Inject 
+    @Named("sms")
+    private Notificacion notificacionSMS;
 
-   //  private MailService mailService;
-    /*
-     * // INYECCION DE DEPENDENCIAS POR CONSTRUCTOR
-     * 
-     * public PedidoService(MailService mailService) {
-     * 
-     * this.mailService = mailService;
-     * 
-     * }
-     */
-/* 
-    // INYECCION DE DEPENDENCIA POR SETTER
-    private MailService mailService;
-    @Inject
-    public void setMailService(MailService mailService) {
-        this.mailService = mailService;
-    }
-*/
     public void realizar(Pedido pedido) {
-        //lookup de la clase MailService
-        MailService  mailService = CDI.current().select(MailService.class).get();
+
         System.out.println("Realizando pedido...");
         System.out.println("Pedido realizado para el cliente: " + pedido.getCliente());
         System.out.println("Producto: " + pedido.getProducto());
@@ -49,6 +30,11 @@ public class PedidoService {
                 "Su pedido de " + pedido.getProducto() + " por un total de $" + pedido.getTotal()
                 + " ha sido realizado con éxito.";
 
-        mailService.enviar(pedido.getCorreo(), asunto, cuerpo);
+        // NOTIICACION DE PEDIDO POR CORREO ELECTRONICO
+        this.notificacionCorreo.enviar(pedido.getCorreo(), cuerpo);
+        
+
+        // NOTIFICACION DE PEDIDO POR SMS
+        this.notificacionSMS.enviar(pedido.getTelefono(), cuerpo);
     }
 }
