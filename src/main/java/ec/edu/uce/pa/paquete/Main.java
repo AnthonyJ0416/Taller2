@@ -7,9 +7,12 @@ import jakarta.inject.Inject;
 
 @QuarkusMain
 public class Main implements QuarkusApplication {
-
+   
     @Inject
     private PedidoService pedidoService;
+
+     @Inject
+    private CompraService compraService;
 
     public static void main(String[] args){
         Quarkus.run(Main.class, args);
@@ -22,6 +25,9 @@ public class Main implements QuarkusApplication {
         pedido.setTelefono("0984110661");
         this.pedidoService.realizar(pedido);
         System.out.println("");
+        Compra compra = new Compra("Elian Guañuna", "PC", 600, "elianguanuna@gmail.com");
+        compra.setTelefono("0987172989");
+        this.compraService.realizar(compra);
         return 0;
     }
 
