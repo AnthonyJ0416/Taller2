@@ -1,62 +1,20 @@
 # pa2_u1_cc_ag
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+## Preguntas de Analisis
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+### 1. ¿En qué parte del ejercicio se aplica IoC y en cuál DI?
+* **IoC (Inversión de Control):** Se aplica cuando Quarkus gestiona el ciclo de vida de los componentes (como `VentaService` y las calculadoras de descuento), encargándose de crearlos, inicializarlos y destruirlos sin que tengas que usar la palabra `new` manualmente.
+* **DI (Inyección de Dependencias):** Se aplica explícitamente en la clase `VentaService`, donde inyectamos las dependencias necesarias (`Auditoria`, `descuentoRegular` por campo y `descuentoVIP` por constructor) utilizando la anotación `@Inject`.
 
-## Running the application in dev mode
+### 2. ¿Qué función cumplen los Qualifiers y por qué son necesarios?
+En el proyecto se usan calificadores como `@Named("regular")` y `@Named("vip")`. Son necesarios porque la interfaz `CalculadoraDescuento` tiene múltiples implementaciones, y el calificador actúa como una etiqueta exacta para que Quarkus sepa qué clase específica debe inyectar en cada variable.
 
-You can run your application in dev mode that enables live coding using:
+### 3. ¿Cuál es la diferencia entre @ApplicationScoped y @Dependent?
+* **`@ApplicationScoped`:** (Usado en `VentaService`) Crea una **única instancia compartida** que permanece viva durante toda la ejecución de la aplicación.
+* **`@Dependent`:** (Usado en `Auditoria`) Crea una **instancia nueva** cada vez que el componente es solicitado, ligándose por completo al ciclo de vida del objeto que lo consume.
 
-```shell script
-./mvnw quarkus:dev
-```
+### 4. ¿Por qué las instancias @ApplicationScoped pueden reutilizarse entre varias ventas?
+Porque `VentaService` no almacena el estado de las transacciones en sus atributos (los datos de las ventas se reciben como parámetros locales en el método `procesarVentas`). Al ser un servicio sin estado, múltiples ejecuciones pueden usar la misma instancia con total seguridad. 
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
-
-## Packaging and running the application
-
-The application can be packaged using:
-
-```shell script
-./mvnw package
-```
-
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
-
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
-```
-
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
-
-## Creating a native executable
-
-You can create a native executable using:
-
-```shell script
-./mvnw package -Dnative
-```
-
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
-
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
-
-You can then execute your native executable with: `./target/pa2_u1_cc_ag-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
-
-## Provided Code
-
-### REST
-
-Easily start your REST Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+### 5. ¿Qué sucedería si se elimina el Qualifier de un punto de inyección de CalculadoraDescuento?
+Si se elimina `@Named("regular")` o `@Named("vip")` de `VentaService`, Quarkus arrojará un error al iniciar la aplicación (`AmbiguousResolutionException`). Esto ocurre porque al existir más de una clase que implementa `CalculadoraDescuento`, el contenedor se vuelve incapaz de determinar cuál de ellas debe inyectar sin la etiqueta del calificador.
