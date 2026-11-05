@@ -1,6 +1,9 @@
 package ec.edu.uce.pa.paquete;
 
 import ec.edu.uce.pa.paquete.interceptors.Auditoria;
+import ec.edu.uce.pa.paquete.interceptors.Mail;
+import ec.edu.uce.pa.paquete.interceptors.MedirTiempo;
+import ec.edu.uce.pa.paquete.interceptors.Sms;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped // delega el control al contenedor Arc
@@ -9,9 +12,11 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class PedidoService {
 
     @Auditoria
+    @MedirTiempo 
+    @Sms 
+    @Mail 
     public String realizar(Pedido pedido, String valor1) {
 
-        Long init = System.currentTimeMillis();
         try {
             Thread.sleep(1500);
         } catch (Exception e) {
@@ -23,9 +28,8 @@ public class PedidoService {
         System.out.println("Total: " + pedido.getTotal());
         System.out.println("Correo: " + pedido.getCorreo());
 
-        Long fin = System.currentTimeMillis() - init;
-
-        return "\nPedido realizado con éxito en el tiempo de " + fin + " milisegundos\n";
+        
+        return "\nPedido realizado con éxito";
 
     }
 }
