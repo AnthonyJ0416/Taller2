@@ -7,25 +7,28 @@ import jakarta.inject.Inject;
 
 @QuarkusMain
 public class Main implements QuarkusApplication {
-   
+
     @Inject
-    private PedidoService pedidoService;
+    private VideoService videoService;
 
-    
-
-    public static void main(String[] args){
+    public static void main(String[] args) {
         Quarkus.run(Main.class, args);
     }
-    
+
     @Override
     public int run(String... args) throws Exception {
-        System.out.println("\nINICIANDO APP QUARKUS\n");
-        Pedido pedido = new Pedido("Anthony Joseph", "Laptop", 1500.00, "juan.perez@example.com");
-        pedido.setTelefono("0984110661");
-        this.pedidoService.realizar(pedido,"");
-      
+        System.out.println("\nINICIANDO PLATAFORMA DE STREAMING \n");
+
+        Video video = new Video(
+            "Tutorial Quaerkus Interceptores",
+            "AnthonyJTutoriales",
+            60,
+            "anthonyjoseph0416@gmail.com"
+        );
+        video.setResolucion("480p 240fps");
+
+        this.videoService.publicar(video, "Programacion");
+
         return 0;
     }
-
-    
 }
