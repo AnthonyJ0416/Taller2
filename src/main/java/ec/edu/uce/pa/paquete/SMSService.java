@@ -1,6 +1,5 @@
-package ec.edu;
+package ec.edu.uce.pa.paquete;
 
-import ec.edu.uce.pa.paquete.Notificacion;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 @Singleton

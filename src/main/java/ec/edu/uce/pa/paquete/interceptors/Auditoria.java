@@ -7,9 +7,10 @@ import java.lang.annotation.Target;
 
 import jakarta.interceptor.InterceptorBinding;
 
-@InterceptorBinding 
+@InterceptorBinding
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD} ) 
+@Target({ ElementType.TYPE, ElementType.METHOD })
+
 public @interface Auditoria {
 
 }

@@ -1,16 +1,15 @@
 package ec.edu.uce.pa.paquete;
 
+import ec.edu.uce.pa.paquete.extensiones.NotificacionExtension;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 @ApplicationScoped
 public class CompraService {
-    @Inject
-    @Named("mail")
-    private Notificacion notificacionCorreo;
-
-    public void realizar(Compra compra) {
+    // se debe recibir una implementacion de la interfaz, solo de esa manera
+    // garantizo que si se extiende la funcionalidad el codigo principal no se tope
+    public void realizar(Compra compra, NotificacionExtension notificacionExtension) { // por argumento
 
         System.out.println("Realizando compra...");
         System.out.println("Compra realizado para el cliente: " + compra.getCliente());
@@ -19,15 +18,9 @@ public class CompraService {
         System.out.println("Correo: " + compra.getCorreo());
         System.out.println("Compra realizado con éxito.");
 
-        String cuerpo = "Estimado " + compra.getCliente() + ",\n\n" +
-                "Su pedido de " + compra.getProducto() + " por un total de $" + compra.getTotal()
-                + " ha sido realizado con éxito.";
-
-        // NOTIICACION DE PEDIDO POR CORREO ELECTRONICO
-        this.notificacionCorreo.enviar(compra.getCorreo(), cuerpo);
-        this.notificacionCorreo.setCantidad(this.notificacionCorreo.getCantidad() + 1);
-        System.out.println("Cantidad de corres enviados compra :" + this.notificacionCorreo.getCantidad());
-        System.out.println("NOmbre:" + this.notificacionCorreo.getNombre());
+        // aqui voy a programar el envio de la notificacion
+        notificacionExtension.enviar("Su pedido ha sido realizado con éxito ", compra.getCliente());
+        
     }
 
 }
